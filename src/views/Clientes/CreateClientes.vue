@@ -3,10 +3,11 @@
   <h1>Cadastro de Clientes</h1>
   <v-form>
     <v-text-field label="Nome" v-model="cliente.name"/>
+    <v-text-field label="Apelido" v-model="cliente.shortName" />
+    <v-text-field label="CPF" v-model="cliente.cpf" />
+    <v-text-field label="Endereço" v-model="cliente.address" />
+    <v-text-field label="Telefone" v-model="cliente.phone" />
 
-    <v-text-field label="Nome Curto" />
-    <v-text-field label="Endereço" />
-    <v-text-field label="CPF" />
     <v-row justify="space-around">
       <v-btn color="primary" @click="cadastrar">Salvar</v-btn>
       <v-btn to="/clientes">Cancelar</v-btn>
@@ -29,14 +30,19 @@
 </template>
 
 <script lang="ts">
+import { Cliente } from '@/app/models/Cliente'
 import { ElectronService } from '@/app/services/ElectronService'
 import Vue from 'vue'
 export default Vue.extend({
   data () {
     return ({
       cliente: {
-        name: ''
-      },
+        name: '',
+        shortName: '',
+        cpf: '',
+        address: '',
+        phone: ''
+      } as Partial<Cliente>,
       showMessage: false
     })
   },

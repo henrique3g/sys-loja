@@ -13,7 +13,28 @@ export class CreateClientesTable1602591203664 implements MigrationInterface {
         },
         {
           type: 'varchar',
-          name: 'name'
+          name: 'name',
+          length: '150'
+        },
+        {
+          type: 'varchar',
+          name: 'shortName',
+          length: '100'
+        },
+        {
+          type: 'varchar',
+          name: 'cpf',
+          length: '11'
+        },
+        {
+          type: 'varchar',
+          name: 'phone',
+          length: '11'
+        },
+        {
+          type: 'varchar',
+          name: 'address',
+          length: '150'
         }
       ]
     })

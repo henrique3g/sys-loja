@@ -6,6 +6,7 @@
 </template>
 
 <script lang="ts">
+import { Cliente } from '@/app/models/Cliente'
 import { ElectronService } from '@/app/services/ElectronService'
 import Vue from 'vue'
 import { DataTableHeader } from 'vuetify'
@@ -26,7 +27,7 @@ export default Vue.extend({
     })
   },
   computed: {
-    headers (): DataTableHeader[] {
+    headers (): DataTableHeader<Cliente>[] {
       return [
         {
           text: 'Nº',
@@ -35,6 +36,22 @@ export default Vue.extend({
         {
           text: 'Nome',
           value: 'name'
+        },
+        {
+          text: 'Apelido',
+          value: 'shortName'
+        },
+        {
+          text: 'CPF',
+          value: 'cpf'
+        },
+        {
+          text: 'Endereço',
+          value: 'address'
+        },
+        {
+          text: 'Telefone',
+          value: 'phone'
         }
       ]
     }
