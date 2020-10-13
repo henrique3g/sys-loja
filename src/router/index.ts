@@ -29,6 +29,11 @@ const routes: Array<RouteConfig> = [
     path: '/clientes/new',
     name: 'CreateClientes',
     component: () => import('@/views/Clientes/CreateClientes.vue')
+  },
+  {
+    path: '/vendas/do',
+    name: 'DoVenda',
+    component: () => import('@/views/Vendas/DoVenda.vue')
   }
 ]
 

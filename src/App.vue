@@ -17,6 +17,10 @@
           <v-icon color="primary" class="mr-1">mdi-account</v-icon>
           Clientes
         </v-list-item>
+        <v-list-item to="/vendas/do">
+          <v-icon color="primary" class="mr-1">mdi-cart</v-icon>
+          Fazer Venda
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-main>
