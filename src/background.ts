@@ -1,15 +1,13 @@
 import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import './database/connection'
+import './app/events'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null
-
-ipcMain.handle('create-product', (e, product) => {
-  return product
-})
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
