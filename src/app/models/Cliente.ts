@@ -1,4 +1,5 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from 'typeorm'
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
+import { Venda } from './Venda'
 
 @Entity('clientes')
 export class Cliente extends BaseEntity {
@@ -19,4 +20,7 @@ export class Cliente extends BaseEntity {
 
   @Column()
   phone: string;
+
+  @OneToMany(type => Venda, venda => venda.cliente)
+  vendas: Venda[];
 }

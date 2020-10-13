@@ -1,4 +1,5 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from 'typeorm'
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
+import { ProductVenda } from './ProductVenda'
 
 @Entity('products')
 export class Product extends BaseEntity {
@@ -13,4 +14,7 @@ export class Product extends BaseEntity {
 
   @Column()
   stock: number;
+
+  @OneToMany(type => ProductVenda, productVenda => productVenda.product)
+  productVenda: ProductVenda[]
 }

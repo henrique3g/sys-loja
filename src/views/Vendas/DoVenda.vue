@@ -8,6 +8,7 @@
           <v-autocomplete
             :items="clientes"
             item-text="name"
+            item-value="id"
             v-model="selectedClient"
             auto-select-first
             clearable
@@ -71,17 +72,18 @@
         <h1>Total: {{totalVenda}}</h1>
       </v-row>
       <v-row justify="end">
-        <v-btn color="success">Finalizar Venda (F10)</v-btn>
+        <v-btn color="success" @click="finishVenda">Finalizar Venda (F10)</v-btn>
       </v-row>
     </v-container>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Product } from '@/app/models/Product'
-import { ElectronService } from '@/app/services/ElectronService'
 import Vue from 'vue'
 import { DataTableHeader } from 'vuetify'
+import { ElectronService } from '@/app/services/ElectronService'
+import { Product } from '@/app/models/Product'
+import { CreateVenda } from '@/app/Contracts/createVenda'
 
 export default Vue.extend({
   data () {
@@ -92,7 +94,13 @@ export default Vue.extend({
       selectedProduct: {} as Partial<Product>,
       selectedsProducts: [],
       amount: null,
-      formValid: false
+      formValid: false,
+      quantityRules: [
+        (v) => v > 0 || 'Quantidade não pode ser negativa'
+      ],
+      productRules: [
+        (v) => !!v.description || 'Escolha um produto'
+      ]
     })
   },
   methods: {
@@ -106,24 +114,21 @@ export default Vue.extend({
       this.amount = null
       this.$refs.form.resetValidation()
       this.$refs.input_produto.focus()
+    },
+    async finishVenda () {
+      const result = await ElectronService().ipcRenderer.invoke('create-venda', {
+        products: this.selectedsProducts,
+        cliente: this.selectedClient,
+        date: new Date(),
+        total: this.totalVenda,
+        input: 0,
+        discount: 0
+      } as CreateVenda)
+      console.log(result)
     }
+
   },
   computed: {
-    quantityRules () {
-      const rules = []
-
-      const minValue = (v) => v > 0 || 'Quantidade não pode ser negativa'
-      rules.push(minValue)
-
-      return rules
-    },
-    productRules () {
-      const rules = []
-
-      const required = (v) => !!v.description || 'Escolha um produto'
-      rules.push(required)
-      return rules
-    },
     totalVenda () {
       const products: [any] = this.selectedsProducts
       if (products.length < 1) return 0
@@ -158,6 +163,7 @@ export default Vue.extend({
         }
       ]
     }
+
   },
   async mounted () {
     this.clientes = await ElectronService().ipcRenderer.invoke('list-all-clientes')
