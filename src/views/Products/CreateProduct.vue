@@ -8,6 +8,11 @@
           label="Descrição"
           v-model="product.description"
         />
+        <v-text-field
+          label="Preço"
+          type="number"
+          v-model="product.price"
+        />
       </v-form>
       </v-col>
     </v-row>
@@ -25,16 +30,19 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { ElectronService } from '@/app/services/ElectronService'
+import { Product } from '@/app/models/Product'
 
 @Component
 export default class Home extends Vue {
-  product = {
-    description: ''
+  product: Partial<Product> = {
+    description: '',
+    price: null,
+    stock: 0
   }
 
   cadastrar () {
     console.log('Cadastrando')
-    console.log(this.product.description)
+    console.log(this.product)
     ElectronService().ipcRenderer.invoke('create-product', this.product).then(console.log)
   }
 }

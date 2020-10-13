@@ -7,6 +7,14 @@
       disable-sort
       fixed-header
     >
+      <template v-slot:item.actions="{ item }">
+        <v-btn class="mr-2" color="red" @click="deleteProduct(item.id)" >
+          <v-icon color="white">mdi-trash-can-outline</v-icon>
+        </v-btn>
+        <v-btn color="success" @click="updateProduct(item.id)" >
+          <v-icon color="white">mdi-pencil-circle-outline</v-icon>
+        </v-btn>
+      </template>
     </v-data-table>
 
   </v-container>
@@ -16,6 +24,7 @@
 import Vue from 'vue'
 import { ElectronService } from '@/app/services/ElectronService'
 import { DataTableHeader } from 'vuetify'
+import { Product } from '@/app/models/Product'
 export default Vue.extend({
 
   data () {
@@ -31,8 +40,21 @@ export default Vue.extend({
           value: 'id'
         },
         {
-          text: 'Desc',
+          text: 'Descrição',
           value: 'description'
+        },
+        {
+          text: 'Preço',
+          value: 'price'
+        },
+        {
+          text: 'Estoque',
+          value: 'stock'
+        },
+        {
+          text: 'Ações',
+          value: 'actions',
+          width: 200
         }
       ]
     }
@@ -42,12 +64,19 @@ export default Vue.extend({
   },
   methods: {
     async getAllProducts () {
-      const products = await ElectronService().ipcRenderer.invoke('get-all-products')
+      const products = await ElectronService().ipcRenderer.invoke('get-all-products') as Product[]
       console.log(products)
       this.products = products
     },
     toCreateProduct () {
       this.$router.push('/products/new')
+    },
+    async deleteProduct (id) {
+      console.log('delete: ' + id)
+    },
+
+    async updateProduct (id) {
+      console.log('open update: ' + id)
     }
   }
 })
