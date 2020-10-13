@@ -21,6 +21,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { IpcRenderer } from 'electron'
+const ipcRenderer: IpcRenderer = window.require('electron').ipcRenderer
 
 export default Vue.extend({
   name: 'HelloWorld',
@@ -37,7 +39,7 @@ export default Vue.extend({
     cadastrar () {
       console.log('Cadastrando')
       console.log(this.product.description)
-      // console.log(__dirname)
+      ipcRenderer.invoke('create-product', this.product).then(console.log)
     }
   }
 })
