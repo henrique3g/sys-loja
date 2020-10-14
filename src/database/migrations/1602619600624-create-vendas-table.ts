@@ -19,7 +19,8 @@ export class CreateVendasTable1602619600624 implements MigrationInterface {
       {
         name: 'input',
         type: 'decimal',
-        scale: 2
+        scale: 2,
+        default: 0
       },
       {
         name: 'discount',
