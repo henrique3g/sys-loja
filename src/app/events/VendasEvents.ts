@@ -7,7 +7,7 @@ ipcMain.handle('create-venda', async (e, venda: CreateVenda) => {
   try {
     console.log(venda)
     const vendaCreated = await Venda.save(Venda.create({
-      cliente: { id: Number(venda.cliente) },
+      cliente: { id: parseInt(venda.cliente + '') },
       date: venda.date,
       discount: venda.discount,
       input: venda.input,

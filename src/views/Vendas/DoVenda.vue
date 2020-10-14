@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row justify="space-between">
+    <v-row justify="space-between" no-gutters>
       <h1>Venda</h1>
       <h1><v-icon @click="cancelarVenda">mdi-close</v-icon></h1>
     </v-row>
