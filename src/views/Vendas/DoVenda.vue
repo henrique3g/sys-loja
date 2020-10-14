@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container>
     <h1>Venda</h1>
     <v-form v-model="formValid" ref="form">
       <v-container>
@@ -12,12 +12,15 @@
             v-model="selectedClient"
             auto-select-first
             clearable
-            class="mr-2"
             label="Cliente"
           />
         </v-row>
-        <v-divider/>
-        <h3>Produtos</h3>
+        <v-row>
+          <v-divider/>
+        </v-row>
+        <v-row>
+          <h3>Produtos</h3>
+        </v-row>
 
         <v-row>
           <v-autocomplete
@@ -67,14 +70,15 @@
       :items="selectedsProducts"
     />
     <v-divider/>
-    <v-container fluid>
-      <v-row justify="end" class="mr-4">
-        <h1>Total: {{totalVenda}}</h1>
-      </v-row>
-      <v-row justify="end">
+    <v-row justify="end" >
+      <v-col cols="auto">
+        <v-row justify="end" no-gutters>
+          <h3 class="align-self-center mr-3">Total: </h3>
+          <h1 class="text-end">{{totalVenda}}</h1>
+        </v-row>
         <v-btn color="success" @click="finishVenda">Finalizar Venda (F10)</v-btn>
-      </v-row>
-    </v-container>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <h1 class="mb-4">Produtos</h1>
     <v-btn color="primary" @click="toCreateProduct">Novo</v-btn>
     <v-data-table
       :items="products"

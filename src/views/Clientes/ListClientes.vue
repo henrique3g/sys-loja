@@ -1,5 +1,6 @@
 <template>
 <v-container>
+  <h1 class="mb-4">Clientes</h1>
   <v-btn color="primary" to="/clientes/new">Novo</v-btn>
   <v-data-table :items="clientes" :headers="headers" />
 </v-container>
