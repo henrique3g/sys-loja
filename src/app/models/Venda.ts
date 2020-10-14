@@ -20,7 +20,7 @@ export class Venda extends BaseEntity {
   discount: number;
 
   @ManyToOne(type => Cliente, cliente => cliente.vendas)
-  cliente: Cliente;
+  cliente?: Cliente;
 
   @OneToMany(type => ProductVenda, productVenda => productVenda.venda)
   productVenda: ProductVenda[];

@@ -36,6 +36,12 @@ export class CreateClientesTable1602591203664 implements MigrationInterface {
           name: 'address',
           length: '150'
         }
+      ],
+      uniques: [
+        {
+          name: 'cpf_unique',
+          columnNames: ['cpf']
+        }
       ]
     })
 

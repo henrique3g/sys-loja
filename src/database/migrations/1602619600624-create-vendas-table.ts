@@ -32,7 +32,8 @@ export class CreateVendasTable1602619600624 implements MigrationInterface {
       },
       {
         name: 'clienteId',
-        type: 'integer'
+        type: 'integer',
+        isNullable: true
       }
     ],
     foreignKeys: [
