@@ -1,11 +1,11 @@
 <template>
   <v-container>
   <h1>Seja bem vindo</h1>
-  <v-card width="250">
+  <v-card width="250" color="primary" elevation="10" dark>
     <v-card-title>Vendas do dia</v-card-title>
     <v-card-text>
-      <h2 class="mb-3">A Vista: {{ formatAsCurrency(aVista) }}</h2>
-      <h2>A Prazo: {{ formatAsCurrency(aPrazo) }}</h2>
+      <h2 class="mb-3">A Vista: {{ aVista | currency }}</h2>
+      <h2>A Prazo: {{ aPrazo | currency }}</h2>
     </v-card-text>
   </v-card>
   </v-container>
@@ -28,10 +28,6 @@ export default class Home extends Vue {
     const { aVista, aPrazo } = await ElectronService().ipcRenderer.invoke('caixa-saldo')
     this.aVista = aVista
     this.aPrazo = aPrazo
-  }
-
-  formatAsCurrency (value) {
-    return new Intl.NumberFormat('pt-BR', { currency: 'BRL', style: 'currency', minimumFractionDigits: 2 }).format(value)
   }
 }
 </script>

@@ -90,15 +90,15 @@
       <v-col cols="auto">
         <v-row justify="end" no-gutters>
           <h6 class="align-self-center mr-3">Total sem desconto: </h6>
-          <h5 class="text-end">{{ formatAsCurrency(totalVenda) }}</h5>
+          <h5 class="text-end">{{ totalVenda | currency }}</h5>
         </v-row>
         <v-row justify="end" no-gutters>
           <h6 class="align-self-center mr-3">Desconto: </h6>
-          <h4 class="text-end">{{ formatAsCurrency(descontoEmReais) }}</h4>
+          <h4 class="text-end">{{ descontoEmReais | currency }}</h4>
         </v-row>
         <v-row justify="end" no-gutters>
           <h3 class="align-self-center mr-3">Total: </h3>
-          <h1 class="text-end">{{ formatAsCurrency(totalComDesconto) }}</h1>
+          <h1 class="text-end">{{ totalComDesconto | currency }}</h1>
         </v-row>
         <v-btn color="success" @click="finalizeVenda" :disabled="validVenda">Finalizar Venda (F10)</v-btn>
       </v-col>
@@ -166,9 +166,6 @@ export default Vue.extend({
     cancelarVenda () {
       this.$refs.form.reset()
       this.selectedsProducts = []
-    },
-    formatAsCurrency (value) {
-      return new Intl.NumberFormat('pt-BR', { currency: 'BRL', style: 'currency', minimumFractionDigits: 2 }).format(value)
     }
   },
   computed: {
