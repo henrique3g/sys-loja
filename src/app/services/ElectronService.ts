@@ -1,5 +1,5 @@
 import { IpcRenderer } from 'electron'
-const ipcRenderer: IpcRenderer = window.require('electron').ipcRenderer
+export const ipcRenderer: IpcRenderer = window.require('electron').ipcRenderer
 
 class Electron {
   ipcRenderer: IpcRenderer

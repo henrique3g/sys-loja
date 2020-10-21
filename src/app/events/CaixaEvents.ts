@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron'
 import { Venda } from '../models/Venda'
 
-const sum = (prev, current) => parseFloat(current.total + '') + prev
+const sum = (prev: number, current: Venda) => parseFloat(current.total + '') + prev
 
 ipcMain.handle('caixa-saldo', async () => {
   const allVendas = await Venda.find({ relations: ['cliente'] })

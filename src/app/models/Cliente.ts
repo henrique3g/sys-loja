@@ -4,23 +4,23 @@ import { Venda } from './Venda'
 @Entity('clientes')
 export class Cliente extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column()
-  shortName: string;
+  shortName!: string;
 
   @Column()
-  cpf: string;
+  cpf!: string;
 
   @Column()
-  address: string;
+  address!: string;
 
   @Column()
-  phone: string;
+  phone!: string;
 
-  @OneToMany(type => Venda, venda => venda.cliente)
-  vendas: Venda[];
+  @OneToMany(() => Venda, venda => venda.cliente)
+  vendas!: Venda[];
 }

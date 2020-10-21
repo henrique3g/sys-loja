@@ -36,7 +36,7 @@ import { Product } from '@/app/models/Product'
 export default class Home extends Vue {
   product: Partial<Product> = {
     description: '',
-    price: null,
+    price: 0,
     stock: 0
   }
 

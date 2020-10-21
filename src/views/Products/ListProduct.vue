@@ -8,7 +8,7 @@
       disable-sort
       fixed-header
     >
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:[`item.actions`]="{ item }">
         <v-btn class="mr-2" color="red" @click="deleteProduct(item.id)" >
           <v-icon color="white">mdi-trash-can-outline</v-icon>
         </v-btn>
@@ -30,7 +30,7 @@ export default Vue.extend({
 
   data () {
     return ({
-      products: []
+      products: [] as Product[]
     })
   },
   computed: {
@@ -65,18 +65,16 @@ export default Vue.extend({
   },
   methods: {
     async getAllProducts () {
-      const products = await ElectronService().ipcRenderer.invoke('get-all-products') as Product[]
-      console.log(products)
-      this.products = products
+      this.products = await ElectronService().ipcRenderer.invoke('get-all-products') as Product[]
     },
     toCreateProduct () {
       this.$router.push('/products/new')
     },
-    async deleteProduct (id) {
+    async deleteProduct (id: number) {
       console.log('delete: ' + id)
     },
 
-    async updateProduct (id) {
+    async updateProduct (id: number) {
       console.log('open update: ' + id)
     }
   }

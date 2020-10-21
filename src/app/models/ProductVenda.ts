@@ -5,17 +5,17 @@ import { Venda } from './Venda'
 @Entity('product_venda')
 export class ProductVenda extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  amount: number;
+  amount!: number;
 
   @Column()
-  price: number;
+  price!: number;
 
-  @ManyToOne(type => Product, product => product.productVenda)
-  product: Product;
+  @ManyToOne(() => Product, product => product.productVenda)
+  product!: Product;
 
-  @ManyToOne(type => Venda, venda => venda.productVenda)
-  venda: Venda;
+  @ManyToOne(() => Venda, venda => venda.productVenda)
+  venda!: Venda;
 }

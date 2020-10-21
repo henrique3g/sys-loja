@@ -4,17 +4,17 @@ import { ProductVenda } from './ProductVenda'
 @Entity('products')
 export class Product extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  description: string;
+  description!: string;
 
   @Column()
-  price: number;
+  price!: number;
 
   @Column()
-  stock: number;
+  stock!: number;
 
-  @OneToMany(type => ProductVenda, productVenda => productVenda.product)
-  productVenda: ProductVenda[]
+  @OneToMany(() => ProductVenda, productVenda => productVenda.product)
+  productVenda!: ProductVenda[]
 }

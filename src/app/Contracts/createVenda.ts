@@ -1,5 +1,4 @@
 import { Cliente } from '../models/Cliente'
-import { Product } from '../models/Product'
 
 export interface ProductVenda {
   id: number;
