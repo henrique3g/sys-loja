@@ -30,9 +30,10 @@
 </template>
 
 <script lang="ts">
-import { Cliente } from '@/app/models/Cliente'
-import { ElectronService } from '@/app/services/ElectronService'
 import Vue from 'vue'
+import { Cliente } from '@/models/Cliente'
+import { ClienteService } from '@/services/ClienteService'
+
 export default Vue.extend({
   data () {
     return ({
@@ -48,7 +49,7 @@ export default Vue.extend({
   },
   methods: {
     async cadastrar () {
-      await ElectronService().ipcRenderer.invoke('create-cliente', this.cliente)
+      await ClienteService.create(this.cliente)
       this.showMessage = true
     }
   }

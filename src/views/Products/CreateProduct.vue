@@ -29,8 +29,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { ElectronService } from '@/app/services/ElectronService'
-import { Product } from '@/app/models/Product'
+import { Product } from '@/models/Product'
+import { createProduct } from '@/services/ProductService'
 
 @Component
 export default class Home extends Vue {
@@ -43,7 +43,7 @@ export default class Home extends Vue {
   cadastrar () {
     console.log('Cadastrando')
     console.log(this.product)
-    ElectronService().ipcRenderer.invoke('create-product', this.product).then(console.log)
+    createProduct(this.product).then(console.log)
   }
 }
 </script>

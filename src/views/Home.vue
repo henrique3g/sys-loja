@@ -14,7 +14,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
-import { ElectronService } from '@/app/services/ElectronService'
+import { CaixaService } from '@/services/CaixaService'
 
 @Component({
   components: {
@@ -22,12 +22,12 @@ import { ElectronService } from '@/app/services/ElectronService'
   }
 })
 export default class Home extends Vue {
-  aVista = null
-  aPrazo = null
+  aVista = 0
+  aPrazo = 0
   async mounted () {
-    const { aVista, aPrazo } = await ElectronService().ipcRenderer.invoke('caixa-saldo')
-    this.aVista = aVista
-    this.aPrazo = aPrazo
+    const saldo = await CaixaService.getSaldo()
+    this.aVista = saldo.aVista
+    this.aPrazo = saldo.aPrazo
   }
 }
 </script>

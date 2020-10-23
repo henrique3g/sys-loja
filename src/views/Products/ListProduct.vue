@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h1 class="mb-4">Produtos</h1>
-    <v-btn color="primary" @click="toCreateProduct">Novo</v-btn>
+    <v-btn color="primary" to="/products/new">Novo</v-btn>
     <v-data-table
       :items="products"
       :headers="headers"
@@ -23,9 +23,9 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { ElectronService } from '@/app/services/ElectronService'
 import { DataTableHeader } from 'vuetify'
-import { Product } from '@/app/models/Product'
+import { Product } from '@/models/Product'
+import { findAllProducts } from '@/services/ProductService'
 export default Vue.extend({
 
   data () {
@@ -65,11 +65,9 @@ export default Vue.extend({
   },
   methods: {
     async getAllProducts () {
-      this.products = await ElectronService().ipcRenderer.invoke('get-all-products') as Product[]
+      this.products = await findAllProducts()
     },
-    toCreateProduct () {
-      this.$router.push('/products/new')
-    },
+
     async deleteProduct (id: number) {
       console.log('delete: ' + id)
     },

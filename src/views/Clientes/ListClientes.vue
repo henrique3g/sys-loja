@@ -7,14 +7,15 @@
 </template>
 
 <script lang="ts">
-import { Cliente } from '@/app/models/Cliente'
-import { ElectronService } from '@/app/services/ElectronService'
 import Vue from 'vue'
 import { DataTableHeader } from 'vuetify'
+import { Cliente } from '@/models/Cliente'
+import { ClienteService } from '@/services/ClienteService'
+
 export default Vue.extend({
   data () {
     return {
-      clientes: []
+      clientes: [] as Cliente[]
     }
   },
   methods: {
@@ -23,9 +24,7 @@ export default Vue.extend({
     }
   },
   async mounted () {
-    this.clientes = await ElectronService().ipcRenderer.invoke('list-all-clientes', {
-      name: 'jaoo henrique'
-    })
+    this.clientes = await ClienteService.findAll()
   },
   computed: {
     headers (): DataTableHeader<Cliente>[] {

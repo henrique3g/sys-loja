@@ -129,12 +129,14 @@
 <script lang="ts">
 import { Ref, Component, Vue } from 'vue-property-decorator'
 import { DataTableHeader } from 'vuetify'
-import { ElectronService } from '@/app/services/ElectronService'
-import { Product } from '@/app/models/Product'
-import { CreateVenda } from '@/app/Contracts/createVenda'
+import { Product } from '@/models/Product'
+import { CreateVenda } from '@/Contracts/createVenda'
 import FinalizeVenda from './FinalizeVenda.vue'
-import { Cliente } from '@/app/models/Cliente'
+import { Cliente } from '@/models/Cliente'
 import { ProdutoVenda } from './types'
+import { VendaService } from '@/services/VendaService'
+import { ClienteService } from '@/services/ClienteService'
+import { findAllProducts } from '@/services/ProductService'
 
 @Component({ components: { FinalizeVenda } })
 export default class DoVenda extends Vue {
@@ -173,7 +175,7 @@ export default class DoVenda extends Vue {
   }
 
   async finalizeVenda () {
-    const result = await ElectronService().ipcRenderer.invoke('create-venda', {
+    const result = await VendaService.createVenda({
       products: this.selectedsProducts,
       cliente: this.selectedClient,
       date: new Date(),
@@ -250,12 +252,8 @@ export default class DoVenda extends Vue {
   }
 
   async mounted () {
-    this.clientes = await ElectronService().ipcRenderer.invoke(
-      'list-all-clientes'
-    )
-    this.produtos = await ElectronService().ipcRenderer.invoke(
-      'get-all-products'
-    )
+    this.clientes = await ClienteService.findAll()
+    this.produtos = await findAllProducts()
   }
 }
 </script>
