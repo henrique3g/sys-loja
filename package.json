@@ -15,6 +15,7 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.5",
+    "date-fns": "^2.16.1",
     "sqlite3": "^5.0.0",
     "typeorm": "^0.2.28",
     "vue": "^2.6.11",

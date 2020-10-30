@@ -123,11 +123,20 @@
       </v-col>
     </v-row>
     <finalize-venda :show="finalizeModal" />
+    <v-dialog width="300" v-model="successDialog">
+      <v-card>
+        <v-card-title>Finalizada</v-card-title>
+        <v-card-text>Venda salva com sucesso</v-card-text>
+        <v-card-actions class="justify-end">
+          <v-btn ref="btn-ok" color="primary" @click="successDialog = false">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Ref, Component, Vue } from 'vue-property-decorator'
+import { Ref, Component, Vue, Watch } from 'vue-property-decorator'
 import { DataTableHeader } from 'vuetify'
 import { Product } from '@/models/Product'
 import { CreateVenda } from '@/Contracts/createVenda'
@@ -142,6 +151,7 @@ import { findAllProducts } from '@/services/ProductService'
 export default class DoVenda extends Vue {
   @Ref('form') form!: HTMLFormElement;
   @Ref('input_produto') input_produto!: HTMLInputElement;
+  @Ref('btn-ok') btnOk!: {$el: HTMLButtonElement};
 
   clientes: Cliente[] = [];
   produtos: Product[] = [];
@@ -155,8 +165,18 @@ export default class DoVenda extends Vue {
   productRules = [(v: Product) => (v && !!v.description) || 'Escolha um produto'];
 
   finalizeModal = false;
+  successDialog = false;
   parcelas = 1;
   entrada = 0;
+
+  @Watch('successDialog')
+  onDialogChange (val: boolean) {
+    if (val === true) {
+      setTimeout(() => {
+        this.btnOk.$el.focus()
+      }, 100)
+    }
+  }
 
   addToCart () {
     if (this.selectedProduct) {
@@ -175,15 +195,21 @@ export default class DoVenda extends Vue {
   }
 
   async finalizeVenda () {
-    const result = await VendaService.createVenda({
-      products: this.selectedsProducts,
-      cliente: this.selectedClient,
-      date: new Date(),
-      total: this.totalVenda,
-      input: this.entrada,
-      discount: this.desconto
-    } as CreateVenda)
-    console.log(result)
+    try {
+      const result = await VendaService.createVenda({
+        products: this.selectedsProducts,
+        cliente: this.selectedClient,
+        date: new Date(),
+        total: this.totalVenda,
+        input: this.entrada,
+        discount: this.desconto,
+        parcelas: this.parcelas
+      } as CreateVenda)
+      this.successDialog = true
+      console.log(result)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   cancelarVenda () {

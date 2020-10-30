@@ -13,4 +13,5 @@ export interface CreateVenda {
   total: number;
   input: number;
   discount: number;
+  parcelas: number;
 }
