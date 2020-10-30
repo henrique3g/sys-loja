@@ -1,7 +1,7 @@
 <template>
 <v-container>
   <h1>Cadastro de Clientes</h1>
-  <v-form>
+  <v-form ref="form">
     <v-text-field label="Nome" v-model="cliente.name"/>
     <v-text-field label="Apelido" v-model="cliente.shortName" />
     <v-text-field label="CPF" v-model="cliente.cpf" />
@@ -50,6 +50,8 @@ export default Vue.extend({
   methods: {
     async cadastrar () {
       await ClienteService.create(this.cliente)
+      const form = this.$refs.form as HTMLFormElement
+      form.reset()
       this.showMessage = true
     }
   }
