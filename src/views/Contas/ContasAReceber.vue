@@ -49,7 +49,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { format, compareAsc, isPast, isBefore } from 'date-fns'
+import { format, compareAsc, isBefore } from 'date-fns'
 import { Cliente } from '@/models/Cliente'
 import { ClienteService } from '@/services/ClienteService'
 import { DataTableHeader } from 'vuetify'

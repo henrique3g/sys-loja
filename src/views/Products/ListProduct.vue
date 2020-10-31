@@ -38,24 +38,33 @@ export default Vue.extend({
       return [
         {
           text: 'Nº',
-          value: 'id'
+          value: 'id',
+          width: 50
+        },
+        {
+          text: 'Ref',
+          value: 'reference',
+          width: 90
         },
         {
           text: 'Descrição',
-          value: 'description'
+          value: 'description',
+          width: 300
         },
         {
           text: 'Preço',
-          value: 'price'
+          value: 'price',
+          width: 100
         },
         {
           text: 'Estoque',
-          value: 'stock'
+          value: 'stock',
+          width: 100
         },
         {
           text: 'Ações',
           value: 'actions',
-          width: 200
+          width: 150
         }
       ]
     }

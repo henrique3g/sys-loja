@@ -17,6 +17,12 @@ export class CreateProductsTable1602555040962 implements MigrationInterface {
         length: '100'
       },
       {
+        type: 'varchar',
+        name: 'reference',
+        length: '20',
+        isNullable: true
+      },
+      {
         type: 'decimal',
         name: 'price',
         scale: 2
