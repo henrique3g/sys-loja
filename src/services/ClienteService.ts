@@ -1,4 +1,5 @@
 import { Cliente } from '@/models/Cliente'
+import { Parcela } from '@/models/Parcela'
 
 class ClienteServiceClass {
   async findAll () {
@@ -12,6 +13,15 @@ class ClienteServiceClass {
     } catch (error) {
       return 'error'
     }
+  }
+
+  async getContas (clienteId: number) {
+    return Parcela.createQueryBuilder('parcela')
+      .innerJoinAndSelect('parcela.contaAReceber', 'conta')
+      .innerJoinAndSelect('conta.venda', 'venda')
+      .innerJoinAndSelect('venda.cliente', 'cliente')
+      .where('cliente.id = :id', { id: clienteId })
+      .getMany()
   }
 }
 

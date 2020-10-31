@@ -22,6 +22,10 @@
           <v-icon color="white" class="mr-3">mdi-cart</v-icon>
           Fazer Venda
         </v-list-item>
+        <v-list-item class="text-no-wrap" to="/contas">
+          <v-icon color="white" class="mr-3">mdi-account-cash</v-icon>
+            Contas A Receber
+        </v-list-item>
         <v-list-item to="*" class="settings-position">
             <v-icon color="white" class="mr-3">mdi-cog</v-icon>
             Configurações
