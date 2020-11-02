@@ -1,28 +1,45 @@
 <template>
   <v-container>
     <h1>Contas a receber</h1>
-    <v-autocomplete
-      ref="input"
-      label="Cliente"
-      :items="clientes"
-      item-text="name"
-      item-value="id"
-      v-model="selectedCliente"
-      :clearable="true"
-    />
-    <v-row class="mb-3" no-gutters>
-      <v-card class="mr-3 white--text" color="primary">
-        <v-card-title>Total em aberto</v-card-title>
+    <v-row no-gutters>
+      <v-col>
+        <v-autocomplete
+          ref="input"
+          label="Cliente"
+          :items="clientes"
+          item-text="name"
+          item-value="id"
+          v-model="selectedCliente"
+          :clearable="true"
+        />
+      </v-col>
+      <v-col class="ml-3" cols="3">
+        <v-select
+          :items="stateItems"
+          item-text="text"
+          item-value="value"
+          v-model="stateContas"
+        />
+      </v-col>
+    </v-row>
+    <v-row class="mb-3 flex-nowrap" no-gutters>
+      <v-card :disabled="!selectedCliente" width="27%" class="mr-3 white--text" color="primary">
+        <v-card-title>Em aberto</v-card-title>
         <v-card-text class="white--text font-weight-bold">{{total | currency}}</v-card-text>
       </v-card>
-      <v-card class="white--text" color="error">
-        <v-card-title>Total vencido</v-card-title>
+      <v-card :disabled="!selectedCliente" width="27%" class="white--text" color="error">
+        <v-card-title>Vencido</v-card-title>
         <v-card-text class="white--text font-weight-bold">{{totalVencido | currency}}</v-card-text>
       </v-card>
-      <v-card class="ml-3 white--text" color="success">
-        <v-card-title>Total selecionado</v-card-title>
+      <v-card :disabled="!selectedCliente" width="27%" class="ml-3 mr-3 white--text" color="success">
+        <v-card-title>Selecionado</v-card-title>
         <v-card-text class="white--text font-weight-bold">{{totalSelecionado | currency}}</v-card-text>
       </v-card>
+      <div class="ml-auto align-self-end">
+
+        <v-btn v-if="this.stateContas === 'receber'" @click="baixarConta" :disabled="!selectedContas.length" x-large class="primary align-self-end">Baixar</v-btn>
+        <v-btn v-if="this.stateContas === 'baixadas'" @click="estornarContas" :disabled="!selectedContas.length" x-large class="error align-self-end">Estornar</v-btn>
+      </div>
     </v-row>
     <v-data-table
       :disable-sort="true"
@@ -32,6 +49,7 @@
       :hide-default-footer="true"
       show-select
       v-model="selectedContas"
+      no-data-text="Não possui contas"
     >
       <template v-slot:[`item.dueDate`]="{ item }">
         <div :class="vencida(item.dueDate) ? 'red--text' : ''">
@@ -56,10 +74,18 @@
           {{ item.value - item.valueReceived | currency }}
       </template>
     </v-data-table>
-    <v-row justify="end">
 
-     <h1 >Total: {{total}}</h1>
-    </v-row>
+    <v-dialog width="300" v-model="successModal">
+      <v-card>
+        <v-card-title>
+          Baixado
+        </v-card-title>
+        <v-card-text>Contas Baixas com sucesso</v-card-text>
+        <v-card-actions class="justify-center">
+          <v-btn color="primary" @click="successModal = false">Ok</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -68,6 +94,7 @@ import { Vue, Component, Watch } from 'vue-property-decorator'
 import { format, compareAsc, isBefore } from 'date-fns'
 import { Cliente } from '@/models/Cliente'
 import { ClienteService } from '@/services/ClienteService'
+import { ContaService } from '@/services/ContaService'
 import { DataTableHeader } from 'vuetify'
 import { Parcela } from '@/models/Parcela'
 
@@ -75,8 +102,12 @@ import { Parcela } from '@/models/Parcela'
 export default class ContasAReceber extends Vue {
   clientes = [] as Cliente[];
   contas = [] as Parcela[];
-  selectedCliente = null as Cliente | null;
+  // selectedCliente = null as Cliente | null;
+  selectedCliente = null as number | null;
+  stateContas = this.stateItems[0].value
   selectedContas = [] as Parcela[]
+
+  successModal = false;
   async mounted () {
     this.clientes = await ClienteService.findAll()
   }
@@ -89,12 +120,39 @@ export default class ContasAReceber extends Vue {
     return isBefore(new Date(format(date, 'MM-dd-y')), new Date(format(new Date(), 'MM-dd-y')))
   }
 
+  async baixarConta () {
+    await ContaService.baixarConta(this.selectedContas)
+    this.successModal = true
+    if (this.selectedCliente) {
+      this.getContas(this.selectedCliente)
+    }
+  }
+
+  async estornarContas () {
+    console.log('estornar')
+  }
+
+  async getContas (clienteId: number) {
+    const contas = await ClienteService.getContas(clienteId, this.stateContas)
+    this.contas = contas.sort((item1, item2) => compareAsc(item1.dueDate, item2.dueDate))
+    this.selectedContas = []
+  }
+
+  @Watch('stateContas')
+  async watchStateContas () {
+    if (this.selectedCliente) {
+      await this.getContas(this.selectedCliente)
+    }
+  }
+
   @Watch('selectedCliente')
   async watchselectedCliente (clienteId: number) {
     console.log('buscando...')
-    if (!clienteId) return
-    const contas = await ClienteService.getContas(clienteId)
-    this.contas = contas.sort((item1, item2) => compareAsc(item1.dueDate, item2.dueDate))
+    if (!clienteId) {
+      this.contas = []
+      return
+    }
+    await this.getContas(clienteId)
   }
 
   get total () {
@@ -107,6 +165,19 @@ export default class ContasAReceber extends Vue {
 
   get totalSelecionado () {
     return this.selectedContas.reduce((prev, curr) => prev + curr.value, 0)
+  }
+
+  get stateItems () {
+    return [
+      {
+        text: 'A Receber',
+        value: 'receber' as 'receber'
+      },
+      {
+        text: 'Baixadas',
+        value: 'baixadas' as 'baixadas'
+      }
+    ]
   }
 
   get tableHeaders (): DataTableHeader[] {
@@ -145,3 +216,11 @@ export default class ContasAReceber extends Vue {
   }
 }
 </script>
+
+<style scoped>
+  .btn-baixar {
+    min-height: 100px;
+    position: relative;
+    width: 11.5%;
+  }
+</style>
