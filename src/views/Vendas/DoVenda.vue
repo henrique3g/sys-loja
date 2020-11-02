@@ -101,7 +101,15 @@
       disable-pagination
       :headers="headers"
       :items="selectedsProducts && selectedsProducts"
-    />
+      no-data-text="Nenhum produto adicionado"
+    >
+      <template v-slot:[`item.price`]="{item}">
+        {{ item.price | currency }}
+      </template>
+      <template v-slot:[`item.total`]="{item}">
+        {{ item.total | currency }}
+      </template>
+    </v-data-table>
     <v-divider />
     <v-row justify="end">
       <v-col cols="auto">
@@ -122,7 +130,6 @@
         >
       </v-col>
     </v-row>
-    <finalize-venda :show="finalizeModal" />
     <v-dialog width="300" v-model="successDialog">
       <v-card>
         <v-card-title>Finalizada</v-card-title>
@@ -140,14 +147,13 @@ import { Ref, Component, Vue, Watch } from 'vue-property-decorator'
 import { DataTableHeader } from 'vuetify'
 import { Product } from '@/models/Product'
 import { CreateVenda } from '@/Contracts/createVenda'
-import FinalizeVenda from './FinalizeVenda.vue'
 import { Cliente } from '@/models/Cliente'
 import { ProdutoVenda } from './types'
 import { VendaService } from '@/services/VendaService'
 import { ClienteService } from '@/services/ClienteService'
 import { findAllProducts } from '@/services/ProductService'
 
-@Component({ components: { FinalizeVenda } })
+@Component
 export default class DoVenda extends Vue {
   @Ref('form') form!: HTMLFormElement;
   @Ref('input_produto') input_produto!: HTMLInputElement;
@@ -164,7 +170,6 @@ export default class DoVenda extends Vue {
 
   productRules = [(v: Product) => (v && !!v.description) || 'Escolha um produto'];
 
-  finalizeModal = false;
   successDialog = false;
   parcelas = 1;
   entrada = 0;
@@ -205,6 +210,12 @@ export default class DoVenda extends Vue {
         discount: this.desconto,
         parcelas: this.parcelas
       } as CreateVenda)
+      this.form.reset()
+      this.selectedsProducts = []
+      this.$nextTick(() => {
+        this.entrada = 0
+        this.parcelas = 1
+      })
       this.successDialog = true
       console.log(result)
     } catch (error) {
@@ -214,6 +225,10 @@ export default class DoVenda extends Vue {
 
   cancelarVenda () {
     this.form.reset()
+    this.$nextTick(() => {
+      this.entrada = 0
+      this.parcelas = 1
+    })
     this.selectedsProducts = []
   }
 
