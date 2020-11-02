@@ -36,7 +36,7 @@
         <v-card-text class="white--text font-weight-bold">{{totalSelecionado | currency}}</v-card-text>
       </v-card>
       <div class="ml-auto align-self-end">
-
+        <v-text-field v-model="totalAReceber" label="Valor a Baixar" />
         <v-btn v-if="this.stateContas === 'receber'" @click="baixarConta" :disabled="!selectedContas.length" x-large class="primary align-self-end">Baixar</v-btn>
         <v-btn v-if="this.stateContas === 'baixadas'" @click="estornarContas" :disabled="!selectedContas.length" x-large class="error align-self-end">Estornar</v-btn>
       </div>
@@ -106,6 +106,7 @@ export default class ContasAReceber extends Vue {
   selectedCliente = null as number | null;
   stateContas = this.stateItems[0].value
   selectedContas = [] as Parcela[]
+  totalAReceber = 0;
 
   successModal = false;
   async mounted () {
@@ -121,7 +122,7 @@ export default class ContasAReceber extends Vue {
   }
 
   async baixarConta () {
-    await ContaService.baixarConta(this.selectedContas)
+    await ContaService.baixarConta(this.selectedContas, this.totalAReceber)
     this.successModal = true
     if (this.selectedCliente) {
       this.getContas(this.selectedCliente)
@@ -145,6 +146,11 @@ export default class ContasAReceber extends Vue {
     }
   }
 
+  @Watch('selectedContas')
+  async watchContas () {
+    this.totalAReceber = this.totalSelecionado
+  }
+
   @Watch('selectedCliente')
   async watchselectedCliente (clienteId: number) {
     console.log('buscando...')
@@ -164,7 +170,7 @@ export default class ContasAReceber extends Vue {
   }
 
   get totalSelecionado () {
-    return this.selectedContas.reduce((prev, curr) => prev + curr.value, 0)
+    return this.selectedContas.reduce((prev, curr) => prev + curr.value - curr.valueReceived, 0)
   }
 
   get stateItems () {
@@ -216,11 +222,3 @@ export default class ContasAReceber extends Vue {
   }
 }
 </script>
-
-<style scoped>
-  .btn-baixar {
-    min-height: 100px;
-    position: relative;
-    width: 11.5%;
-  }
-</style>

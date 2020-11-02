@@ -3,7 +3,7 @@ import { Parcela } from '@/models/Parcela'
 import { Recebimento } from '@/models/Recebimento'
 
 class SingletonContaService {
-  async baixarConta (contas: Parcela[]) {
+  async baixarConta (contas: Parcela[], valorPago: number) {
     console.log(contas)
     const connection = getConnection()
     const queryRunner = connection.createQueryRunner()
@@ -14,17 +14,25 @@ class SingletonContaService {
     const RecebimentoRepo = manager.getRepository(Recebimento)
     const ParcelaRepo = manager.getRepository(Parcela)
 
+    let somaDoValorBaixado = 0
     try {
-      const recebimentos = contas.map(conta => Recebimento.create({
-        parcela: {
-          id: conta.id
-        },
-        paymentDate: new Date(),
-        value: conta.value
+      const recebimentos = await Promise.all(contas.map(async conta => {
+        const restante = conta.value - conta.valueReceived
+        const valorABaixar = restante + somaDoValorBaixado <= valorPago ? restante : valorPago - somaDoValorBaixado
+        somaDoValorBaixado += valorABaixar
+        const parcela = await ParcelaRepo.findOneOrFail(conta.id)
+        await ParcelaRepo.save({ ...parcela, valueReceived: parcela.valueReceived + valorABaixar })
+
+        return Recebimento.create({
+          parcela: {
+            id: conta.id
+          },
+          paymentDate: new Date(),
+          value: valorABaixar
+        })
       }))
+
       await RecebimentoRepo.save(recebimentos)
-      const parcelas = await ParcelaRepo.find({ where: { id: In(contas.map(c => c.id)) } })
-      await ParcelaRepo.save(parcelas.map(parcela => ({ ...parcela, valueReceived: parcela.valueReceived + parcela.value })))
       await queryRunner.commitTransaction()
     } catch (error) {
       await queryRunner.rollbackTransaction()
