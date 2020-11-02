@@ -6,10 +6,10 @@ export class Product extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
+  @Column({ length: 100 })
   description!: string;
 
-  @Column()
+  @Column({ length: 20 })
   reference?: string;
 
   @Column()

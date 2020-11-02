@@ -9,10 +9,10 @@
       fixed-header
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn class="mr-2" color="red" @click="deleteProduct(item.id)" >
+        <v-btn small class="mr-2" color="red" @click="deleteProduct(item.id)" >
           <v-icon color="white">mdi-trash-can-outline</v-icon>
         </v-btn>
-        <v-btn color="success" @click="updateProduct(item.id)" >
+        <v-btn small color="success" @click="updateProduct(item.id)" >
           <v-icon color="white">mdi-pencil-circle-outline</v-icon>
         </v-btn>
       </template>

@@ -3,18 +3,20 @@
     <v-row class="text-start">
       <v-col>
       <h1>Cadastro de Produto</h1>
-      <v-form >
+      <v-form v-model="formValid">
         <v-text-field
           label="Descrição"
-          v-model="product.description"
+          v-model="description"
           tabindex="0"
           autofocus
+          counter="100"
+          :rules="descriptionRules"
         />
         <v-row no-gutters>
           <v-text-field
             label="Referência"
             type="text"
-            v-model="product.reference"
+            v-model="reference"
             tabindex="1"
             class="mr-5"
           />
@@ -22,7 +24,8 @@
             label="Preço"
             type="number"
             tabindex="2"
-            v-model="product.price"
+            :rules="priceRules"
+            v-model="price"
           />
         </v-row>
       </v-form>
@@ -30,7 +33,7 @@
     </v-row>
       <v-row justify="space-around">
         <v-btn tabindex="4" to="/products">Cancelar</v-btn>
-        <v-btn tabindex="3" @click="cadastrar" color="primary">
+        <v-btn :disabled="!formValid" tabindex="3" @click="cadastrar" color="primary">
           Cadastrar
         </v-btn>
       </v-row>
@@ -54,24 +57,28 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { Product } from '@/models/Product'
 import { createProduct } from '@/services/ProductService'
 
 @Component
 export default class Home extends Vue {
-  product: Partial<Product> = {
-    description: '',
-    price: 0,
-    stock: 0,
-    reference: ''
-  }
-
+  formValid = false
   successMessage = false;
 
+  description = ''
+  reference = ''
+  stock = 0;
+  price: number | null = null
+
+  priceRules = [(v: number) => v > 0 || 'Preço não pode ser menor que 0']
+  descriptionRules = [(desc: string) => desc.length > 0 || 'Descrição é obrigatório']
+
   cadastrar () {
-    console.log('Cadastrando')
-    console.log(this.product)
-    createProduct(this.product).then(result => {
+    createProduct({
+      description: this.description,
+      reference: this.reference,
+      price: this.price || 0,
+      stock: this.stock
+    }).then(result => {
       this.successMessage = true
       setTimeout(() => {
         type BtnType = {$el: HTMLButtonElement}
@@ -79,10 +86,10 @@ export default class Home extends Vue {
         btn.$el.focus()
       }, 0)
       console.log(result)
-      this.product.description = ''
-      this.product.reference = ''
-      this.product.price = 0
-      this.product.stock = 0
+      this.description = ''
+      this.reference = ''
+      this.price = null
+      this.stock = 0
     })
   }
 }
