@@ -130,6 +130,15 @@
         >
       </v-col>
     </v-row>
+    <v-dialog width="300" v-model="productExistsDialog">
+      <v-card class="text-center">
+        <v-card-title class="justify-center">Ops!</v-card-title>
+        <v-card-text>Produto já foi adicionado!</v-card-text>
+        <v-card-actions class="justify-center">
+          <v-btn ref="btn_product_exists" color="primary" @click="productExistsDialog = false">Ok</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog width="300" v-model="successDialog">
       <v-card>
         <v-card-title>Finalizada</v-card-title>
@@ -158,6 +167,7 @@ export default class DoVenda extends Vue {
   @Ref('form') form!: HTMLFormElement;
   @Ref('input_produto') input_produto!: HTMLInputElement;
   @Ref('btn-ok') btnOk!: {$el: HTMLButtonElement};
+  @Ref('btn_product_exists') btnProductDialog!: {$el: HTMLButtonElement};
 
   clientes: Cliente[] = [];
   produtos: Product[] = [];
@@ -171,6 +181,7 @@ export default class DoVenda extends Vue {
   productRules = [(v: Product) => (v && !!v.description) || 'Escolha um produto'];
 
   successDialog = false;
+  productExistsDialog = false;
   parcelas = 1;
   entrada = 0;
 
@@ -185,6 +196,13 @@ export default class DoVenda extends Vue {
 
   addToCart () {
     if (this.selectedProduct) {
+      if (this.selectedsProducts.find(product => product.id === this.selectedProduct?.id)) {
+        this.productExistsDialog = true
+        setTimeout(() => {
+          this.btnProductDialog.$el.focus()
+        }, 0)
+        return
+      }
       this.selectedsProducts.push({
         id: this.selectedProduct.id,
         price: this.selectedProduct.price,
