@@ -41,7 +41,8 @@ export default class ListVendas extends Vue {
   }
 
   async deleteVenda (vendaId: number) {
-    console.log(vendaId)
+    await VendaService.deleteVenda(vendaId)
+    this.vendas = await VendaService.getVendas()
   }
 
   get headers (): DataTableHeader[] {

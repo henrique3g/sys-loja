@@ -1,9 +1,10 @@
+import { getConnection } from 'typeorm'
+import { addMonths, isToday } from 'date-fns'
 import { CreateVenda } from '@/Contracts/createVenda'
 import { ContaAReceber } from '@/models/ContaAReceber'
 import { Parcela } from '@/models/Parcela'
 import { ProductVenda } from '@/models/ProductVenda'
 import { Venda } from '@/models/Venda'
-import { addMonths, isToday } from 'date-fns'
 
 class VendaServiceClass {
   async createVenda (venda: CreateVenda) {
@@ -52,6 +53,45 @@ class VendaServiceClass {
     const vendas = await Venda.find({ relations: ['cliente', 'productVenda'] })
 
     return vendas.filter((venda) => isToday(venda.date))
+  }
+
+  async deleteVenda (vendaId: number) {
+    const connection = getConnection()
+    const queryRunner = connection.createQueryRunner()
+    await queryRunner.connect()
+    await queryRunner.startTransaction()
+    const manager = queryRunner.manager
+
+    const vendaRepo = manager.getRepository(Venda)
+    const parcelaRepo = manager.getRepository(Parcela)
+    const contaRepo = manager.getRepository(ContaAReceber)
+    const productVendaRepo = manager.getRepository(ProductVenda)
+
+    try {
+      const venda = await vendaRepo.findOneOrFail({ where: { id: vendaId }, relations: ['cliente'] })
+      if (venda.cliente) {
+        const parcelas = await parcelaRepo.createQueryBuilder('parcela')
+          .leftJoin('parcela.contaAReceber', 'conta')
+          .leftJoin('conta.venda', 'venda')
+          .where('venda.id = :id', { id: vendaId })
+          .getMany()
+        await parcelaRepo.delete(parcelas.map(parc => parc.id))
+        await contaRepo.delete({ venda: { id: vendaId } })
+        await productVendaRepo.delete({ venda: { id: vendaId } })
+        await vendaRepo.delete({ id: vendaId })
+      } else {
+        await productVendaRepo.delete({ venda: { id: vendaId } })
+        await vendaRepo.delete(venda.id)
+      }
+
+      await queryRunner.commitTransaction()
+    } catch (error) {
+      console.log('ouve um erro...')
+      console.log(error)
+      await queryRunner.rollbackTransaction()
+    } finally {
+      await queryRunner.release()
+    }
   }
 }
 
