@@ -9,12 +9,14 @@
       fixed-header
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn small class="mr-2" color="red" @click="deleteProduct(item.id)" >
-          <v-icon color="white">mdi-trash-can-outline</v-icon>
-        </v-btn>
-        <v-btn small color="success" @click="updateProduct(item.id)" >
-          <v-icon color="white">mdi-pencil-circle-outline</v-icon>
-        </v-btn>
+        <v-row no-gutters class="flex-nowrap">
+          <v-btn small color="success" @click="updateProduct(item.id)" >
+            <v-icon color="white">mdi-pencil-circle-outline</v-icon>
+          </v-btn>
+          <v-btn small class="ml-2" color="red" @click="deleteProduct(item.id)" >
+            <v-icon color="white">mdi-trash-can-outline</v-icon>
+          </v-btn>
+        </v-row>
       </template>
     </v-data-table>
 
@@ -64,7 +66,7 @@ export default Vue.extend({
         {
           text: 'Ações',
           value: 'actions',
-          width: 150
+          width: 30
         }
       ]
     }

@@ -2,7 +2,19 @@
 <v-container>
   <h1 class="mb-4">Clientes</h1>
   <v-btn color="primary" to="/clientes/new">Novo</v-btn>
-  <v-data-table :items="clientes" :headers="headers" />
+  <v-data-table :items="clientes" :headers="headers">
+    <template v-slot:[`item.actions`]="{ item }">
+      <v-row no-gutters class="flex-nowrap">
+
+      <v-btn small class="mr-1" color="success" @click="editCliente(item.id)" >
+        <v-icon color="white">mdi-pencil-circle-outline</v-icon>
+      </v-btn>
+      <v-btn small color="red" @click="removeCliente(item.id)" >
+        <v-icon color="white">mdi-trash-can-outline</v-icon>
+      </v-btn>
+      </v-row>
+    </template>
+  </v-data-table>
 </v-container>
 </template>
 
@@ -19,8 +31,11 @@ export default Vue.extend({
     }
   },
   methods: {
-    getClientes () {
-      console.log('asd')
+    async removeCliente (clienteId: number) {
+      console.log('Remove: ' + clienteId)
+    },
+    async editCliente (clienteId: number) {
+      console.log('editando: ' + clienteId)
     }
   },
   async mounted () {
@@ -52,6 +67,11 @@ export default Vue.extend({
         {
           text: 'Telefone',
           value: 'phone'
+        },
+        {
+          text: 'Ações',
+          value: 'actions',
+          width: 30
         }
       ]
     }
