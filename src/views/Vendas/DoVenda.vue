@@ -109,6 +109,11 @@
       <template v-slot:[`item.total`]="{item}">
         {{ item.total | currency }}
       </template>
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-btn x-small color="error" @click="removeProduct(item.id)">
+          <v-icon small color="white">mdi-trash-can-outline</v-icon>
+        </v-btn>
+      </template>
     </v-data-table>
     <v-divider />
     <v-row justify="end">
@@ -192,6 +197,10 @@ export default class DoVenda extends Vue {
         this.btnOk.$el.focus()
       }, 100)
     }
+  }
+
+  async removeProduct (id: number) {
+    this.selectedsProducts = this.selectedsProducts.filter((product) => product.id !== id)
   }
 
   addToCart () {
@@ -306,6 +315,11 @@ export default class DoVenda extends Vue {
       {
         text: 'Total',
         value: 'total'
+      },
+      {
+        text: 'Ações',
+        value: 'actions',
+        width: 10
       }
     ]
   }
