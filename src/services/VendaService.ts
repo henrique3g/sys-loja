@@ -3,7 +3,7 @@ import { ContaAReceber } from '@/models/ContaAReceber'
 import { Parcela } from '@/models/Parcela'
 import { ProductVenda } from '@/models/ProductVenda'
 import { Venda } from '@/models/Venda'
-import { addMonths } from 'date-fns'
+import { addMonths, isToday } from 'date-fns'
 
 class VendaServiceClass {
   async createVenda (venda: CreateVenda) {
@@ -46,6 +46,12 @@ class VendaServiceClass {
       console.log(error)
       return 'error'
     }
+  }
+
+  async getVendas () {
+    const vendas = await Venda.find({ relations: ['cliente', 'productVenda'] })
+
+    return vendas.filter((venda) => isToday(venda.date))
   }
 }
 

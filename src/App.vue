@@ -7,27 +7,31 @@
           <div class="text-body-2">Minimize</div>
         </v-list-item>
         <v-list-item to="/" >
-          <v-icon color="white" class="mr-3">mdi-home</v-icon>
+          <v-icon color="white" class="mr-3">mdi-home-outline</v-icon>
           Home
         </v-list-item>
         <v-list-item to="/products">
-          <v-icon color="white" class="mr-3">mdi-tshirt-crew</v-icon>
+          <v-icon color="white" class="mr-3">mdi-tshirt-crew-outline</v-icon>
           Produtos
         </v-list-item>
         <v-list-item to="/clientes">
-          <v-icon color="white" class="mr-3">mdi-account</v-icon>
+          <v-icon color="white" class="mr-3">mdi-account-outline</v-icon>
           Clientes
         </v-list-item>
         <v-list-item class="text-no-wrap" to="/vendas/do">
-          <v-icon color="white" class="mr-3">mdi-cart</v-icon>
+          <v-icon color="white" class="mr-3">mdi-cart-plus</v-icon>
           Fazer Venda
         </v-list-item>
+        <v-list-item class="text-no-wrap" to="/vendas">
+          <v-icon color="white" class="mr-3">mdi-cart-outline</v-icon>
+          Vendas do dia
+        </v-list-item>
         <v-list-item class="text-no-wrap" to="/contas">
-          <v-icon color="white" class="mr-3">mdi-account-cash</v-icon>
-            Contas A Receber
+          <v-icon color="white" class="mr-3">mdi-account-cash-outline</v-icon>
+            Recebimentos
         </v-list-item>
         <v-list-item to="*" class="settings-position">
-            <v-icon color="white" class="mr-3">mdi-cog</v-icon>
+            <v-icon color="white" class="mr-3">mdi-cog-outline</v-icon>
             Configurações
         </v-list-item>
       </v-list>
