@@ -26,6 +26,11 @@ class ClienteServiceClass {
       .andWhere(isBaixada)
       .getMany()
   }
+
+  async removeCliente (clienteId: number) {
+    const cliente = await Cliente.findOneOrFail(clienteId)
+    await Cliente.remove(cliente)
+  }
 }
 
 let instance
