@@ -22,7 +22,7 @@
           <v-icon color="white" class="mr-3">mdi-cart-plus</v-icon>
           Fazer Venda
         </v-list-item>
-        <v-list-item class="text-no-wrap" to="/vendas">
+        <v-list-item class="text-no-wrap" exact to="/vendas">
           <v-icon color="white" class="mr-3">mdi-cart-outline</v-icon>
           Vendas do dia
         </v-list-item>
@@ -52,9 +52,6 @@ export default Vue.extend({
     // HelloWorld
   },
   methods: {
-    toProducts () {
-      this.$router.push('products')
-    },
     expandDrawer () {
       this.drawerExpanded = !this.drawerExpanded
     }
