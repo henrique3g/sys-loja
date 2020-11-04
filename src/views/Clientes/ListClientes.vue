@@ -5,13 +5,12 @@
   <v-data-table :items="clientes" :headers="headers">
     <template v-slot:[`item.actions`]="{ item }">
       <v-row no-gutters class="flex-nowrap">
-
-      <v-btn small class="mr-1" color="success" @click="editCliente(item.id)" >
-        <v-icon color="white">mdi-pencil-circle-outline</v-icon>
-      </v-btn>
-      <v-btn small color="red" @click="removeCliente(item.id)" >
-        <v-icon color="white">mdi-trash-can-outline</v-icon>
-      </v-btn>
+        <v-btn small class="mr-1" color="success" @click="editCliente(item.id)" >
+          <v-icon color="white">mdi-pencil-circle-outline</v-icon>
+        </v-btn>
+        <v-btn small color="red" @click="removeCliente(item.id)" >
+          <v-icon color="white">mdi-trash-can-outline</v-icon>
+        </v-btn>
       </v-row>
     </template>
   </v-data-table>

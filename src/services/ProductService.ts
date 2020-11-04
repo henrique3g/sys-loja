@@ -8,3 +8,8 @@ export const createProduct = async (product: Partial<Product>) => {
 export const findAllProducts = async (): Promise<Product[]> => {
   return await Product.find()
 }
+
+export const deleteProduct = async (productId: number) => {
+  const product = await Product.findOneOrFail(productId)
+  await Product.delete(product)
+}
