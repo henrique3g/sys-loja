@@ -38,7 +38,7 @@
       <div class="ml-auto align-self-end">
         <v-text-field v-model="totalAReceber" label="Valor a Baixar" />
         <v-btn v-if="this.stateContas === 'receber'" @click="baixarConta" :disabled="!selectedContas.length" x-large class="primary align-self-end">Baixar</v-btn>
-        <v-btn v-if="this.stateContas === 'baixadas'" @click="estornarContas" :disabled="!selectedContas.length" x-large class="error align-self-end">Estornar</v-btn>
+        <v-btn v-if="this.stateContas === 'baixadas'" @click="estornarContas" :disabled="!selectedRecebimentos.length" x-large class="error align-self-end">Estornar</v-btn>
       </div>
     </v-row>
     <v-data-table
@@ -49,6 +49,7 @@
       :hide-default-footer="true"
       show-select
       v-model="selectedContas"
+      v-if="stateContas === 'receber'"
       no-data-text="Não possui contas"
     >
       <template v-slot:[`item.dueDate`]="{ item }">
@@ -75,6 +76,22 @@
       </template>
     </v-data-table>
 
+    <v-data-table
+      :items="recebimentos"
+      :headers="tableRecebimentoHeaders"
+      show-select
+      no-data-text="Não possui recebimentos"
+      v-model="selectedRecebimentos"
+      v-if="stateContas === 'baixadas'"
+    >
+      <template v-slot:[`item.paymentDate`]="{ item }">
+        {{ formatDate(item.paymentDate) }}
+      </template>
+      <template v-slot:[`item.value`]="{ item }">
+        {{ item.value | currency }}
+      </template>
+    </v-data-table>
+
     <v-dialog width="300" v-model="successModal">
       <v-card>
         <v-card-title>
@@ -97,15 +114,17 @@ import { ClienteService } from '@/services/ClienteService'
 import { ContaService } from '@/services/ContaService'
 import { DataTableHeader } from 'vuetify'
 import { Parcela } from '@/models/Parcela'
+import { Recebimento } from '@/models/Recebimento'
 
 @Component
 export default class ContasAReceber extends Vue {
   clientes = [] as Cliente[];
   contas = [] as Parcela[];
-  // selectedCliente = null as Cliente | null;
+  recebimentos: Recebimento[] = []
   selectedCliente = null as number | null;
   stateContas = this.stateItems[0].value
   selectedContas = [] as Parcela[]
+  selectedRecebimentos: Recebimento[] = []
   totalAReceber = 0;
 
   successModal = false;
@@ -130,19 +149,39 @@ export default class ContasAReceber extends Vue {
   }
 
   async estornarContas () {
-    console.log('estornar')
+    try {
+      await ContaService.estornarRecebimento(this.selectedRecebimentos)
+      await this.getRecebimentos(this.selectedCliente || 0)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   async getContas (clienteId: number) {
-    const contas = await ClienteService.getContas(clienteId, this.stateContas)
+    const contas = await ContaService.getContas(clienteId)
     this.contas = contas.sort((item1, item2) => compareAsc(item1.dueDate, item2.dueDate))
     this.selectedContas = []
+    this.selectedRecebimentos = []
+  }
+
+  async getRecebimentos (clienteId: number) {
+    const recebimento = await ContaService.getRecebimentos(clienteId)
+    console.log(recebimento)
+    this.contas = []
+    this.selectedContas = []
+    this.selectedRecebimentos = []
+    this.recebimentos = recebimento
   }
 
   @Watch('stateContas')
-  async watchStateContas () {
+  async watchStateContas (state: 'baixadas' | 'receber') {
     if (this.selectedCliente) {
-      await this.getContas(this.selectedCliente)
+      if (state === 'receber') {
+        await this.getContas(this.selectedCliente)
+      }
+      if (state === 'baixadas') {
+        this.getRecebimentos(this.selectedCliente)
+      }
     }
   }
 
@@ -158,7 +197,11 @@ export default class ContasAReceber extends Vue {
       this.contas = []
       return
     }
-    await this.getContas(clienteId)
+    if (this.stateContas === 'receber') {
+      await this.getContas(clienteId)
+    } else {
+      await this.getRecebimentos
+    }
   }
 
   get total () {
@@ -182,6 +225,35 @@ export default class ContasAReceber extends Vue {
       {
         text: 'Baixadas',
         value: 'baixadas' as 'baixadas'
+      }
+    ]
+  }
+
+  get tableRecebimentoHeaders (): DataTableHeader[] {
+    return [
+      {
+        text: 'N° Rec.',
+        value: 'id'
+      },
+      {
+        text: 'N° Venda',
+        value: 'parcela.contaAReceber.venda.id'
+      },
+      {
+        text: 'N° Parcela',
+        value: 'parcela.number'
+      },
+      {
+        text: 'Valor pago',
+        value: 'value'
+      },
+      {
+        text: 'Data Pag.',
+        value: 'paymentDate'
+      },
+      {
+        text: '',
+        value: ''
       }
     ]
   }

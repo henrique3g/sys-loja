@@ -1,5 +1,4 @@
 import { Cliente } from '@/models/Cliente'
-import { Parcela } from '@/models/Parcela'
 
 class ClienteServiceClass {
   async findAll () {
@@ -13,18 +12,6 @@ class ClienteServiceClass {
     } catch (error) {
       return 'error'
     }
-  }
-
-  async getContas (clienteId: number, status: 'baixadas' | 'receber' = 'receber') {
-    const isBaixada = status === 'baixadas' ? 'parcela.valueReceived = parcela.value' : 'parcela.valueReceived < parcela.value'
-    console.log(isBaixada)
-    return Parcela.createQueryBuilder('parcela')
-      .innerJoinAndSelect('parcela.contaAReceber', 'conta')
-      .innerJoinAndSelect('conta.venda', 'venda')
-      .innerJoinAndSelect('venda.cliente', 'cliente')
-      .where('cliente.id = :id', { id: clienteId })
-      .andWhere(isBaixada)
-      .getMany()
   }
 
   async removeCliente (clienteId: number) {
