@@ -147,9 +147,10 @@
     <v-dialog width="300" v-model="successDialog">
       <v-card>
         <v-card-title>Finalizada</v-card-title>
-        <v-card-text>Venda salva com sucesso</v-card-text>
+        <v-card-text>Deseja imprimir?</v-card-text>
         <v-card-actions class="justify-end">
-          <v-btn ref="btn-ok" color="primary" @click="successDialog = false">OK</v-btn>
+          <v-btn ref="btn-ok" color="error" @click="successDialog = false">Não</v-btn>
+          <v-btn ref="btn-ok" color="primary" :to="`/print_venda/${vendaId}`">Sim</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -179,6 +180,7 @@ export default class DoVenda extends Vue {
   selectedClient: Cliente|null = null;
   selectedProduct: Product|null = null;
   selectedsProducts: ProdutoVenda[] = [];
+  vendaId: number | null = null;
   amount: number|null = null;
   formValid = false;
   quantityRules = [(v: number) => v > 0 || 'Quantidade não pode ser negativa'];
@@ -245,6 +247,7 @@ export default class DoVenda extends Vue {
       })
       this.successDialog = true
       console.log(result)
+      this.vendaId = parseInt(result as string)
     } catch (error) {
       console.log(error)
     }

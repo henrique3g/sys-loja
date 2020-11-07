@@ -16,9 +16,14 @@
       {{ item.input | currency }}
     </template>
     <template v-slot:[`item.actions`]="{ item }">
-      <v-btn x-small color="error" @click="deleteVenda(item.id)">
-        <v-icon small color="white">mdi-trash-can-outline</v-icon>
-      </v-btn>
+      <v-row no-gutters class="flex-nowrap">
+        <v-btn x-small class="mr-1" color="primary" :to="`/print_venda/${item.id}`">
+          <v-icon small color="white">mdi-printer</v-icon>
+        </v-btn>
+        <v-btn x-small color="error" @click="deleteVenda(item.id)">
+          <v-icon small color="white">mdi-trash-can-outline</v-icon>
+        </v-btn>
+      </v-row>
     </template>
   </v-data-table>
 </v-container>

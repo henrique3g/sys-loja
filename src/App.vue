@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer class="elevation-12" :width="drawerExpanded? 200 : 50"  color="primary" dark app permanent>
+    <v-navigation-drawer class="elevation-12 d-print-none" :width="drawerExpanded? 200 : 50"  color="primary" dark app permanent>
       <v-list>
         <v-list-item @click="expandDrawer">
           <v-icon  color="white" class="mr-3">mdi-arrow-expand-right</v-icon>

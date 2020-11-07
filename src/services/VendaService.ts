@@ -24,7 +24,7 @@ class VendaServiceClass {
         product: { id: prod.id }
       })))
 
-      if (!venda.cliente) return 'ok'
+      if (!venda.cliente) return vendaCreated.id
       console.log(vendaCreated)
 
       const contaAReceber = await ContaAReceber.save(ContaAReceber.create({ date: vendaCreated.date, venda: vendaCreated, value: vendaCreated.total - vendaCreated.input }))
@@ -42,7 +42,7 @@ class VendaServiceClass {
 
       await Parcela.save(parcelas)
 
-      return 'ok'
+      return vendaCreated.id
     } catch (error) {
       console.log(error)
       return 'error'
@@ -53,6 +53,18 @@ class VendaServiceClass {
     const vendas = await Venda.find({ relations: ['cliente', 'productVenda'] })
 
     return vendas.filter((venda) => isToday(venda.date))
+  }
+
+  async getVenda (vendaId: number) {
+    return await Venda.findOneOrFail(vendaId, {
+      relations: [
+        'cliente',
+        'productVenda',
+        'productVenda.product',
+        'contaAReceber',
+        'contaAReceber.parcelas'
+      ]
+    })
   }
 
   async deleteVenda (vendaId: number) {

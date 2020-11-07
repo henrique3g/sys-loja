@@ -41,6 +41,11 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/views/Vendas/ListVendas.vue')
   },
   {
+    path: '/print_venda/:vendaId',
+    name: 'PrintVendas',
+    component: () => import('@/views/Vendas/PrintVenda.vue')
+  },
+  {
     path: '/contas',
     name: 'ContasAReceber',
     component: () => import('@/views/Contas/ContasAReceber.vue')

@@ -1,5 +1,6 @@
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
 import { Cliente } from './Cliente'
+import { ContaAReceber } from './ContaAReceber'
 import { ProductVenda } from './ProductVenda'
 
 @Entity('vendas')
@@ -21,6 +22,9 @@ export class Venda extends BaseEntity {
 
   @ManyToOne(() => Cliente, cliente => cliente.vendas)
   cliente?: Cliente;
+
+  @OneToOne(() => ContaAReceber, contaAReceber => contaAReceber.venda)
+  contaAReceber?: ContaAReceber
 
   @OneToMany(() => ProductVenda, productVenda => productVenda.venda)
   productVenda!: ProductVenda[];

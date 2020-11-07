@@ -13,7 +13,7 @@ export class ContaAReceber extends BaseEntity {
   @Column()
   value!: number;
 
-  @OneToOne(() => Venda)
+  @OneToOne(() => Venda, venda => venda.contaAReceber)
   @JoinColumn()
   venda!: Venda;
 
