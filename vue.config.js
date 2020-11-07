@@ -5,12 +5,13 @@ module.exports = {
   configureWebpack: {
     externals: {
       typeorm: 'commonjs typeorm',
-      sqlite3: 'commonjs sqlite3'
+      sqlite3: 'commonjs sqlite3',
+      electron: 'commonjs electron'
+    }
+  },
+  pluginOptions: {
+    electronBuilder: {
+      externals: ['typeorm', 'sqlite3']
     }
   }
-  // pluginOptions: {
-  // electronBuilder: {
-  // externals: ['typeorm', 'sqlite3']
-  // }
-  // }
 }

@@ -2,6 +2,15 @@
   "name": "loja-mvp",
   "version": "0.1.0",
   "private": true,
+  "author": {
+    "name": "João Henrique",
+    "email": "jhenriqueribeirodesa@gmail.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/henrique3g/sistema_venda"
+  },
+  "homepage": "http://henriquesa.tech",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -10,7 +19,8 @@
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "typeorm": "node -r ts-node/register ./node_modules/typeorm/cli.js"
+    "typeorm": "node -r ts-node/register ./node_modules/typeorm/cli.js",
+    "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten"
   },
   "main": "background.js",
   "dependencies": {
@@ -38,6 +48,7 @@
     "@vue/eslint-config-typescript": "^5.0.2",
     "electron": "^9.0.0",
     "electron-devtools-installer": "^3.1.0",
+    "electron-icon-builder": "^1.0.2",
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-node": "^11.1.0",

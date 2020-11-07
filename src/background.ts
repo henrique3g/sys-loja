@@ -1,6 +1,15 @@
 import { app, protocol, BrowserWindow, screen } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import path from 'path'
+
+declare global {
+  /**
+   * static path in app.asar file
+   */
+  const __static: string
+}
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -24,8 +33,9 @@ function createWindow () {
       // nodeIntegration: (process.env
       // .ELECTRON_NODE_INTEGRATION as unknown) as boolean
       nodeIntegration: true,
-      enableRemoteModule: false
-    }
+      enableRemoteModule: true
+    },
+    icon: path.join(__static, 'icon.png')
   })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
